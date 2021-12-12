@@ -56,21 +56,9 @@ func findCorrupted(lines []string) int {
 	loop:
 		for _, symbol := range row {
 			switch symbol {
-			case '(':
-				fallthrough
-			case '[':
-				fallthrough
-			case '{':
-				fallthrough
-			case '<':
+			case '(', '[', '{', '<':
 				stack.push(symbol)
-			case ')':
-				fallthrough
-			case ']':
-				fallthrough
-			case '}':
-				fallthrough
-			case '>':
+			case ')', ']', '}', '>':
 				if stack.peek() != openers[symbol] {
 					sum += values[symbol]
 					break loop

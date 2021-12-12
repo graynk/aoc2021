@@ -34,34 +34,32 @@ func (h Heatmap) findRisk() int {
 	return sum
 }
 
-func (h *Heatmap) basinExplorer(row, col int) int {
-	heatmap := *h
-	cell := heatmap[row][col]
+func (h Heatmap) basinExplorer(row, col int) int {
+	cell := h[row][col]
 	if cell == -1 || cell == 9 {
 		return 0
 	}
 	sum := 1
-	heatmap[row][col] = -1
+	h[row][col] = -1
 	if row > 0 {
 		sum += h.basinExplorer(row-1, col)
 	}
-	if row < len(heatmap)-1 {
+	if row < len(h)-1 {
 		sum += h.basinExplorer(row+1, col)
 	}
 	if col > 0 {
 		sum += h.basinExplorer(row, col-1)
 	}
-	if col < len(heatmap[row])-1 {
+	if col < len(h[row])-1 {
 		sum += h.basinExplorer(row, col+1)
 	}
 	return sum
 }
 
-func (h *Heatmap) basinCounter() int {
-	heatmap := *h
+func (h Heatmap) basinCounter() int {
 	basins := make([]int, 0, 3)
-	for row := range heatmap {
-		for col := range heatmap[row] {
+	for row := range h {
+		for col := range h[row] {
 			basinSize := h.basinExplorer(row, col)
 			basins = append(basins, basinSize)
 		}

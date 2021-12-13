@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/graynk/advent_of_code"
 	"log"
 	"math"
 	"os"
@@ -15,7 +16,7 @@ func cheapestMove(positions []int) int {
 	for _, fixed := range positions {
 		iterFuel := 0
 		for _, value := range positions {
-			iterFuel += iLoveWritingMyOwnAbsIWriteMyOwnAbsEveryDayIDontNeedGenericsILiveAFullAndHappyLife(value - fixed)
+			iterFuel += advent_of_code.ILoveWritingMyOwnAbsIWriteMyOwnAbsEveryDayIDontNeedGenericsILiveAFullAndHappyLife(value - fixed)
 		}
 		if iterFuel < fuel {
 			fuel = iterFuel
@@ -25,7 +26,7 @@ func cheapestMove(positions []int) int {
 }
 
 func countFuel(from, to int) int {
-	diff := iLoveWritingMyOwnAbsIWriteMyOwnAbsEveryDayIDontNeedGenericsILiveAFullAndHappyLife(to - from)
+	diff := advent_of_code.ILoveWritingMyOwnAbsIWriteMyOwnAbsEveryDayIDontNeedGenericsILiveAFullAndHappyLife(to - from)
 	return diff * (diff + 1) / 2
 }
 
@@ -47,13 +48,6 @@ func cheapestMoveProgressive(positions []int) int {
 		}
 	}
 	return fuel
-}
-
-func iLoveWritingMyOwnAbsIWriteMyOwnAbsEveryDayIDontNeedGenericsILiveAFullAndHappyLife(value int) int {
-	if value < 0 {
-		value *= -1
-	}
-	return value
 }
 
 func main() {

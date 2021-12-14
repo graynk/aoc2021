@@ -9,9 +9,19 @@ import (
 	"strings"
 )
 
-type polymerInserter map[string]string
+type polymerInserter struct {
+	rules   map[string]string
+	counter map[string]int64
+}
 
-func parseInput(filename string) (string, polymerInserter) {
+func newPolymerInserter() polymerInserter {
+	return polymerInserter{
+		rules:   make(map[string]string),
+		counter: make(map[string]int64),
+	}
+}
+
+func parseInput(filename string) polymerInserter {
 	inputFile, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -21,44 +31,48 @@ func parseInput(filename string) (string, polymerInserter) {
 	fileScanner := bufio.NewScanner(inputFile)
 
 	fileScanner.Scan()
-	initial := fileScanner.Text()
+	template := fileScanner.Text()
 	fileScanner.Scan()
 
-	instructions := make(polymerInserter)
+	pi := newPolymerInserter()
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
 		split := strings.Split(line, " -> ")
 		if len(split) != 2 {
 			log.Fatalf("wrong input %s", line)
 		}
-		instructions[split[0]] = split[1]
+		pi.rules[split[0]] = string(split[1][0])
 	}
 
-	return initial, instructions
-}
-
-func (pi polymerInserter) insertPolymer(template string) string {
-	builder := strings.Builder{}
-
-	prev := string(template[0])
-	builder.WriteString(prev)
 	for i := 0; i < len(template)-1; i++ {
-		next := string(template[i+1])
-		builder.WriteString(pi[prev+next])
-		builder.WriteString(next)
-		prev = next
+		a := string(template[i])
+		b := string(template[i+1])
+		pi.counter[a+b]++
 	}
 
-	return builder.String()
+	return pi
 }
 
-func commonCounter(template string) int64 {
-	common := make(map[rune]int64)
-	for _, value := range template {
-		common[value]++
+func (pi *polymerInserter) insertPolymers() {
+	newCounter := make(map[string]int64)
+
+	for key, count := range pi.counter {
+		insert := pi.rules[key]
+		newCounter[string(key[0])+insert] += count
+		newCounter[insert+string(key[1])] += count
 	}
+
+	pi.counter = newCounter
+}
+
+func (pi *polymerInserter) commonCounter() int64 {
 	var leastCommon int64 = math.MaxInt64
 	var mostCommon int64 = 0
+
+	common := make(map[rune]int64)
+	for key, count := range pi.counter {
+		common[rune(key[1])] += count
+	}
 
 	for _, value := range common {
 		if value < leastCommon {
@@ -73,16 +87,18 @@ func commonCounter(template string) int64 {
 }
 
 func main() {
-	input, pi := parseInput("./day14/input.txt")
+	pi := parseInput("./day14/input.txt")
 
 	for i := 0; i < 10; i++ {
-		input = pi.insertPolymer(input)
+		pi.insertPolymers()
 	}
 
-	fmt.Println(commonCounter(input))
+	fmt.Println(pi.commonCounter())
 
 	for i := 10; i < 40; i++ {
-		input = pi.insertPolymer(input)
+		pi.insertPolymers()
 	}
+
+	fmt.Println(pi.commonCounter())
 
 }

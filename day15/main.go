@@ -6,7 +6,6 @@ import (
 	"log"
 	"math"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -157,10 +156,6 @@ func (rt *riskTraveler) traverse() int {
 
 		cell.visited = true
 
-		sort.Slice(options, func(i, j int) bool {
-			return options[i].minPath < options[j].minPath
-		})
-
 		cell = options[0]
 		options = options[1:]
 	}
@@ -172,9 +167,9 @@ func main() {
 	start := time.Now()
 	rt := parseInput("./day15/input.txt", 100, 100)
 	result := rt.traverse()
-	fmt.Printf("%v, %d\n", time.Now().Sub(start).Seconds(), result)
+	fmt.Printf("%v seconds, %d\n", time.Now().Sub(start).Seconds(), result)
 	start = time.Now()
 	rt2 := parseInputPart2("./day15/input.txt", 100, 100)
 	result = rt2.traverse()
-	fmt.Printf("%v, %d\n", time.Now().Sub(start).Seconds(), result)
+	fmt.Printf("%v seconds, %d\n", time.Now().Sub(start).Seconds(), result)
 }

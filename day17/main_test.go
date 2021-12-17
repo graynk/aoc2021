@@ -26,7 +26,15 @@ func Test_day17(t *testing.T) {
 		want := 45
 		minX, maxX, minY, maxY := parseInput("./testinput.txt")
 
-		if got := findMaxY(minX, maxX, minY, maxY); got != want {
+		if got, _ := probeLauncher(minX, maxX, minY, maxY); got != want {
+			t.Errorf("part1() = %v, want %v", got, want)
+		}
+	})
+	t.Run("part 2", func(t *testing.T) {
+		want := 112
+		minX, maxX, minY, maxY := parseInput("./testinput.txt")
+
+		if _, got := probeLauncher(minX, maxX, minY, maxY); got != want {
 			t.Errorf("part1() = %v, want %v", got, want)
 		}
 	})

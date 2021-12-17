@@ -51,22 +51,21 @@ func parseInput(filename string) (minX, maxX, minY, maxY int) {
 	return minX, maxX, minY, maxY
 }
 
-func findMaxY(minX, maxX, minY, maxY int) int {
-	totalMaxReachedY := 0
-
+func probeLauncher(minX, maxX, minY, maxY int) (maxReachedYTotal, landedInZoneTotal int) {
 	for startXVelocity := maxX; startXVelocity > 0; startXVelocity-- {
-		for startYVelocity := 0; startYVelocity < -1*minY; startYVelocity++ {
+		for startYVelocity := minY; startYVelocity < -1*minY; startYVelocity++ {
 			xVelocity := startXVelocity
 			yVelocity := startYVelocity
 			x := 0
 			y := 0
 			maxReachedY := 0
 			landedInZone := false
-			for x < maxX {
+			for x <= maxX {
 				x += xVelocity
 				y += yVelocity
-				if x >= minX && y >= minY && y <= maxY {
+				if x >= minX && x <= maxX && y >= minY && y <= maxY {
 					landedInZone = true
+					landedInZoneTotal++
 					break
 				}
 				if xVelocity == 0 && y < minY {
@@ -80,17 +79,16 @@ func findMaxY(minX, maxX, minY, maxY int) int {
 					maxReachedY = y
 				}
 			}
-			if landedInZone && maxReachedY > totalMaxReachedY {
-				totalMaxReachedY = maxReachedY
-				fmt.Printf("current max is %d\n", totalMaxReachedY)
+			if landedInZone && maxReachedY > maxReachedYTotal {
+				maxReachedYTotal = maxReachedY
 			}
 		}
 	}
 
-	return totalMaxReachedY
+	return maxReachedYTotal, landedInZoneTotal
 }
 
 func main() {
 	minX, maxX, minY, maxY := parseInput("./day17/input.txt")
-	fmt.Println(findMaxY(minX, maxX, minY, maxY))
+	fmt.Println(probeLauncher(minX, maxX, minY, maxY))
 }

@@ -33,7 +33,7 @@ func Test_day18(t *testing.T) {
 		want := 4140
 		numbers := parseInput("./testinput3.txt")
 
-		if got := sumNumbers(numbers).magnitude(); got != want {
+		if got := sumNumbers(numbers).Magnitude(); got != want {
 			t.Errorf("part1() = %v, want %v", got, want)
 		}
 	})

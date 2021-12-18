@@ -37,4 +37,12 @@ func Test_day18(t *testing.T) {
 			t.Errorf("part1() = %v, want %v", got, want)
 		}
 	})
+	t.Run("part 2 max magnitude", func(t *testing.T) {
+		want := 3993
+		numbers := parseInput("./testinput3.txt")
+
+		if got := maxSumMagnitude(numbers); got != want {
+			t.Errorf("part2() = %v, want %v", got, want)
+		}
+	})
 }

@@ -228,6 +228,45 @@ func (s *snailFishNumber) magnitude() int {
 	return sum
 }
 
+func (s *snailFishNumber) Clone() *snailFishNumber {
+	clone := &snailFishNumber{}
+	if s.left != nil {
+		clone.left = s.left.Clone()
+		clone.left.parent = clone
+	}
+	if s.right != nil {
+		clone.right = s.right.Clone()
+		clone.right.parent = clone
+	}
+	clone.value = s.value
+
+	return clone
+}
+
+func cloneSlice(numbers []*snailFishNumber) []*snailFishNumber {
+	clone := make([]*snailFishNumber, len(numbers))
+	for i := 0; i < len(numbers); i++ {
+		clone[i] = numbers[i].Clone()
+	}
+	return clone
+}
+
+func maxSumMagnitude(numbers []*snailFishNumber) int {
+	maxFound := 0
+	for i := 0; i < len(numbers); i++ {
+		for j := 0; j < len(numbers); j++ {
+			if i == j {
+				continue
+			}
+			sum := numbers[i].Clone().add(numbers[j].Clone()).magnitude()
+			if sum > maxFound {
+				maxFound = sum
+			}
+		}
+	}
+	return maxFound
+}
+
 func parseInput(filename string) []*snailFishNumber {
 	inputFile, err := os.Open(filename)
 	if err != nil {
@@ -269,4 +308,6 @@ func main() {
 	numbers := parseInput("./day18/input.txt")
 	sum := sumNumbers(numbers)
 	fmt.Println(sum.magnitude())
+	numbers = parseInput("./day18/input.txt")
+	fmt.Println(maxSumMagnitude(numbers))
 }

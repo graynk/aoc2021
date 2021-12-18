@@ -243,14 +243,6 @@ func (s *snailFishNumber) Clone() *snailFishNumber {
 	return clone
 }
 
-func cloneSlice(numbers []*snailFishNumber) []*snailFishNumber {
-	clone := make([]*snailFishNumber, len(numbers))
-	for i := 0; i < len(numbers); i++ {
-		clone[i] = numbers[i].Clone()
-	}
-	return clone
-}
-
 func maxSumMagnitude(numbers []*snailFishNumber) int {
 	maxFound := 0
 	for i := 0; i < len(numbers); i++ {

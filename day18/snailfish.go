@@ -201,3 +201,11 @@ func (s *SnailFishNumber) Clone() *SnailFishNumber {
 
 	return clone
 }
+
+func cloneSlice(numbers []*SnailFishNumber) []*SnailFishNumber {
+	clone := make([]*SnailFishNumber, len(numbers))
+	for i := 0; i < len(numbers); i++ {
+		clone[i] = numbers[i].Clone()
+	}
+	return clone
+}

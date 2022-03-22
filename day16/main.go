@@ -1,25 +1,13 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
 )
 
 func parseInput(filename string) Packet {
-	inputFile, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer inputFile.Close()
+	packetStream := NewBitStream(filename, 5300)
 
-	fileReader := bufio.NewReader(inputFile)
-
-	packetStream := NewBitStream(5300)
-	for inputByte, err := fileReader.ReadByte(); err == nil && inputByte != '\n'; inputByte, err = fileReader.ReadByte() {
-		packetStream.WriteByte(inputByte)
-	}
+	defer packetStream.Close()
 
 	return parsePacket(&packetStream)
 }

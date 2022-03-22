@@ -27,4 +27,5 @@ func parseInput(filename string) Packet {
 func main() {
 	packet := parseInput("./day16/input.txt")
 	fmt.Println(packet.VersionSum())
+	fmt.Println(packet.Value())
 }

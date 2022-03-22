@@ -3,11 +3,14 @@ package main
 type PacketType int
 
 const (
-	Undef1 PacketType = iota
-	Undef2
-	Undef3
-	Undef4
+	Sum PacketType = iota
+	Product
+	Min
+	Max
 	Literal
+	Greater
+	Less
+	Equal
 )
 
 type PacketHeader struct {
@@ -102,4 +105,92 @@ func (p Packet) VersionSum() uint {
 	}
 
 	return sum
+}
+
+func (p Packet) sum() uint {
+	var value uint
+
+	for _, packet := range p.subpackets {
+		value += packet.Value()
+	}
+
+	return value
+}
+
+func (p Packet) product() uint {
+	var value uint = 1
+
+	for _, packet := range p.subpackets {
+		value *= packet.Value()
+	}
+
+	return value
+}
+
+func (p Packet) min() uint {
+	value := p.subpackets[0].Value()
+
+	for _, packet := range p.subpackets[1:] {
+		currentValue := packet.Value()
+		if currentValue < value {
+			value = currentValue
+		}
+	}
+
+	return value
+}
+
+func (p Packet) max() uint {
+	value := p.subpackets[0].Value()
+
+	for _, packet := range p.subpackets[1:] {
+		currentValue := packet.Value()
+		if currentValue > value {
+			value = currentValue
+		}
+	}
+
+	return value
+}
+
+func (p Packet) greater() uint {
+	if p.subpackets[0].Value() > p.subpackets[1].Value() {
+		return 1
+	}
+	return 0
+}
+
+func (p Packet) less() uint {
+	if p.subpackets[0].Value() < p.subpackets[1].Value() {
+		return 1
+	}
+	return 0
+}
+
+func (p Packet) equal() uint {
+	if p.subpackets[0].Value() == p.subpackets[1].Value() {
+		return 1
+	}
+	return 0
+}
+
+func (p Packet) Value() uint {
+	switch p.header.typeID {
+	case Sum:
+		p.value = p.sum()
+	case Product:
+		p.value = p.product()
+	case Min:
+		p.value = p.min()
+	case Max:
+		p.value = p.max()
+	case Greater:
+		p.value = p.greater()
+	case Less:
+		p.value = p.less()
+	case Equal:
+		p.value = p.equal()
+	}
+
+	return p.value
 }
